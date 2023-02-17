@@ -14,13 +14,13 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  roll_name: {
+  role_name: {
     type: String,
     required: true,
   },
 },{collection:"Users"});
 
-userSchema.statics.signup = async function (name, email, password, roll_name) {
+userSchema.statics.signup = async function (name, email, password, role_name) {
   const user = await this.findOne({ email: email });
   if (user) {
     throw Error("Email already exits!!");
@@ -28,7 +28,7 @@ userSchema.statics.signup = async function (name, email, password, roll_name) {
   const salt = await bcrypt.genSalt(10);
   const hashpassword = await bcrypt.hash(password, salt);
 
-  let newUser = { name: name, email: email, password: hashpassword, roll_name: roll_name };
+  let newUser = { name: name, email: email, password: hashpassword, role_name: role_name };
   const create_user = await this.create(newUser);
   return create_user;
 };
