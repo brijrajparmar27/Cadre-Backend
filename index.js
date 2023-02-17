@@ -3,11 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
+const RootRouter = require('./Router');
+
 
 
 app.use(express.json())
 app.use(cors());
 
+app.use(RootRouter);
 
 
 mongoose.connect(process.env.MONGO).then(() => {

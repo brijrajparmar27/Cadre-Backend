@@ -1,0 +1,56 @@
+const User = require('../Model/userModel');
+const jwt = require('jsonwebtoken');
+
+
+const generateJWT  = (user) => {
+    const token = jwt.sign(
+        { _id: user._id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '1 hour'}
+    );
+    return token;
+}
+
+const signUp = async (req, res) => {
+    const { name, email, password, roll_name } = req.body;
+
+    try {
+        let user = await User.signup(name, email, password, roll_name);
+        res.status(200).send({ _id: user._id, name: user.name, email: user.email })
+    } catch (err) {
+        res.status(500).send({message:err.message})
+    }
+};
+
+const signIn = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        let user = await User.login(email, password);
+        let token = generateJWT(user);
+        res.status(200).send({ _id: user._id, email: user.email, jwt: token })
+    } catch (error) {
+        res.status(500).send({ message: error.message })
+    }
+}
+
+const getUserById = async (req, res) => {
+    const { id } = req.params;
+    await User.findById( id ).then(data => {
+        res.send({_id: data._id, name: data.name, email: data.email, roll_name: data.roll_name}).status(200)
+    }).catch(err => {
+        res.status(500).send({message: err.message});
+    }); 
+} 
+
+const getAllUser = async (req, res) => {
+    await User.find().then(data => {
+        res.send(data).status(200)
+    }).catch(error => {
+        res.status(500).send({message: error.message});
+    }); 
+}
+
+
+module.exports =  { signUp, signIn, getUserById, getAllUser };
+
