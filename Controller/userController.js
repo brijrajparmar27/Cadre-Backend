@@ -6,7 +6,7 @@ const generateJWT  = (user) => {
     const token = jwt.sign(
         { _id: user._id, email: user.email },
         process.env.JWT_SECRET,
-        { expiresIn: '1 hour'}
+        { expiresIn: '2 hours'}
     );
     return token;
 };
@@ -54,12 +54,10 @@ const getAllUser = async (req, res) => {
 const updateUser = async (req, res) => {
     const { name, role_name  } = req.body;
     const { id } = req.params;
-    await User.findByIdAndUpdate(id, { name, role_name }).then(data => {
-        res.status(200).send({
-            success: true,
-            message: 'Details update successfully',
-            res: data
-        });
+    await User.findByIdAndUpdate(id, { name, role_name }, { new: true }).then(data => {
+        res.status(200).send({ success: true, message: 'Details update successfully', 
+        _id: data._id, name: data.name, role_name: data.role_name
+    });
     }).catch(error => {
         res.status(500).send({message: error.message});
     });  
