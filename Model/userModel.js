@@ -20,10 +20,13 @@ const userSchema = mongoose.Schema({
   },
 },{collection:"Users"});
 
-userSchema.statics.signup = async function (name, email, password, role_name) {
+userSchema.statics.signup = async function (name, email, password, role_name, res) {
   const user = await this.findOne({ email: email });
   if (user) {
     throw Error("Email already exits!!");
+  }
+  if (role_name === 'Admin') {
+    throw Error("You are not Authorized! to signup as a Admin");
   }
   const salt = await bcrypt.genSalt(10);
   const hashpassword = await bcrypt.hash(password, salt);

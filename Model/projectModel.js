@@ -24,12 +24,13 @@ const projectSchema = mongoose.Schema(
       type: Boolean,
     },
     member: {
-      type: Array,
+      type: [mongoose.Schema.Types.ObjectId],
       default: [],
+      ref: 'Users'
     },
     task: {
       type: Array,
-      default: [],
+      default: []
     },
   },{ collection: "Projects" });
 
