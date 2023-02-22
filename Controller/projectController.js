@@ -1,0 +1,52 @@
+const Project = require("../Model/projectModel");
+
+const addProject = async (req, res) => {
+  const { project_name, discription, assigned_date, deadline, completed, is_completed, member, task } = req.body;
+
+    await Project.create({ project_name, discription, assigned_date, deadline, completed, is_completed, member, task }).then((data) => {
+    res.json(data).status(200);
+    }).catch((err) => {
+      res.json({ message: err.message }).status(500);
+    });
+};
+
+const getProjectById = async (req, res) => {
+    const { id } = req.params;
+    await Project.findById( id ).then(data => {
+        res.json(data).status(200);
+    }).catch(error => {
+        res.json({message: error.message}).status(500);
+    });
+};
+
+const updateProject = async (req, res) => {
+    const { id } = req.params;
+    const { project_name, discription, assigned_date, deadline, completed, is_completed, member, task } = req.body;
+
+    await Project.findByIdAndUpdate( id, { project_name, discription, assigned_date, deadline, completed, is_completed, member, task }, {new: true})
+    .then(data => {
+        res.json(data).status(200);
+    }).catch(error => {
+        res.json({ message: error.message });
+    });
+};
+
+const deleteProject = async (req, res) => {
+    const { id } = req.params;
+    await Project.findByIdAndDelete( id ).then(data => {
+        res.json(data).status(200);
+    }).catch(error => {
+        res.json({message: error.message})
+    })
+};
+
+const getAllProject = async (req, res) => {
+    await Project.find().then(data => {
+        res.json(data).status(200);
+    }).catch(error => {
+        res.json({message: error.message});
+    });
+};
+
+
+module.exports = { addProject, getProjectById, updateProject, deleteProject, getAllProject };

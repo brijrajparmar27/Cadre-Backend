@@ -16,7 +16,8 @@ const signUp = async (req, res) => {
 
     try {
         let user = await User.signup(name, email, password, role_name);
-        res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name })
+        let token = generateJWT(user);
+        res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token })
     } catch (err) {
         res.status(500).send({ message:err.message })
     }
@@ -65,7 +66,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     const { id } = req.params;
-
+    
     await User.findByIdAndDelete( id ).then(data => {
         res.status(200).send({ message: 'User delete successfully', res: data})
     }).catch(error => {
