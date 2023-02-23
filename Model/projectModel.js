@@ -24,14 +24,15 @@ const projectSchema = mongoose.Schema(
       type: Boolean,
     },
     member: {
-      type: [mongoose.Schema.Types.ObjectId],
+      type: [],
       default: [],
-      ref: 'Users'
     },
     task: {
       type: Array,
-      default: []
+      default: [],
     },
-  },{ collection: "Projects" });
+  },
+  { collection: "Projects" }
+);
 
 module.exports = mongoose.model("Projects", projectSchema);
