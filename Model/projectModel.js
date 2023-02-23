@@ -23,8 +23,12 @@ const projectSchema = mongoose.Schema(
     is_completed: {
       type: Boolean,
     },
+    lead: {
+      type: Object,
+      default: {}
+    },
     member: {
-      type: [],
+      type: Array,
       default: [],
     },
     task: {

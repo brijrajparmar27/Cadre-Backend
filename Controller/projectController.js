@@ -1,9 +1,9 @@
 const Project = require("../Model/projectModel");
 
 const addProject = async (req, res) => {
-  const { project_name, discription, assigned_date, deadline, completed, is_completed, member, task } = req.body;
+  const { project_name, discription, assigned_date, deadline, completed, is_completed, lead, member, task } = req.body;
 
-    await Project.create({ project_name, discription, assigned_date, deadline, completed, is_completed, member, task }).then((data) => {
+    await Project.create({ project_name, discription, assigned_date, deadline, completed, is_completed, lead, member, task }).then((data) => {
     res.json(data).status(200);
     }).catch((err) => {
       res.json({ message: err.message }).status(500);

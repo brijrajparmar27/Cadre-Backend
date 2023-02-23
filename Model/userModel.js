@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
   },
 },{collection:"Users"});
 
-userSchema.statics.signup = async function (name, email, password, role_name, res) {
+userSchema.statics.signup = async function (name, email, password, role_name) {
   const user = await this.findOne({ email: email });
   if (user) {
     throw Error("Email already exits!!");
