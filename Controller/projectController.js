@@ -36,7 +36,7 @@ const deleteProject = async (req, res) => {
     await Project.findByIdAndDelete( id ).then(data => {
         res.json(data).status(200);
     }).catch(error => {
-        res.json({message: error.message})
+        res.json({message: error.message}).status(500);
     })
 };
 
@@ -44,9 +44,30 @@ const getAllProject = async (req, res) => {
     await Project.find().then(data => {
         res.json(data).status(200);
     }).catch(error => {
-        res.json({message: error.message});
+        res.json({message: error.message}).status(500);
     });
 };
 
+const getProjectByUserRole = async (req, res) => {
+    const { id } = req.params;
+    const usersProject = await Project.find({"$or": [{
+        "member._id": id
+    }, {
+        "lead._id": id
+    }]})
+    if (usersProject) {
+        res.status(200).send({
+            success: true,
+            message: 'Project get successfully',
+            res: usersProject,
+            total: usersProject?.total,
+        })
+    } else {
+        res.status(402).send({
+            success: false,
+            message: 'Something went wrong'
+        });
+    };
+}; 
 
-module.exports = { addProject, getProjectById, updateProject, deleteProject, getAllProject };
+module.exports = { addProject, getProjectById, updateProject, deleteProject, getAllProject, getProjectByUserRole };

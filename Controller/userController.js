@@ -12,7 +12,6 @@ const generateJWT = (user) => {
 
 const signUp = async (req, res) => {
   const { name, email, password, role_name } = req.body;
-
   try {
     let user = await User.signup(name, email, password, role_name);
     let token = generateJWT(user);
@@ -24,7 +23,6 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     let user = await User.login(email, password);
     let token = generateJWT(user);
@@ -45,8 +43,7 @@ const getUserById = async (req, res) => {
 };
 
 const getAllUser = async (req, res) => {
-
-    await User.find({}, { name: 1, email: 1, role_name: 1 }).then((data) => {
+    await User.find({}, { password: 0 }).then((data) => {
         res.send(data).status(200);
     }).catch((error) => {
         res.status(500).send({ message: error.message });
