@@ -25,13 +25,17 @@ const projectSchema = mongoose.Schema(
     },
     lead: {
       type: Object,
-      default: {}
+      default: {},
     },
     member: {
       type: Array,
       default: [],
     },
     task: {
+      type: Array,
+      default: [],
+    },
+    stack: {
       type: Array,
       default: [],
     },
