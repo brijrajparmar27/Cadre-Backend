@@ -43,7 +43,10 @@ const getUserById = async (req, res) => {
 };
 
 const getAllUser = async (req, res) => {
-    await User.find({}, { password: 0 }).then((data) => {
+    const { column, order } = JSON.parse(req.query.sort);
+    const sort = {};
+    sort[`${column}`] = order 
+    await User.find({}, { password: 0 }).collation({locale: "en"}).sort(sort).then((data) => {
         res.send(data).status(200);
     }).catch((error) => {
         res.status(500).send({ message: error.message });
