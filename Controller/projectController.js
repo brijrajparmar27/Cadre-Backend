@@ -13,6 +13,7 @@ const addProject = async (req, res) => {
 };
 
 const getProjectById = async (req, res) => {
+
   const { id } = req.params;
   await Project.findById(id)
     .then((data) => {
@@ -60,6 +61,9 @@ const getAllProject = async (req, res) => {
 
 const getProjectByUserRole = async (req, res) => {
   const { id } = req.params;
+  const { column, order } = JSON.parse(req.query.sort);
+  var sort = {};
+  sort[`${column}`] = order
   const usersProject = await Project.find({
     $or: [
       {
@@ -69,7 +73,7 @@ const getProjectByUserRole = async (req, res) => {
         "lead._id": id,
       },
     ],
-  });
+  }).collation({locale: "en"}).sort(sort);
   if (usersProject) {
     res.status(200).send({
       success: true,
