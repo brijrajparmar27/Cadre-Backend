@@ -52,6 +52,23 @@ const getAllUser = async (req, res) => {
         res.status(500).send({ message: error.message });
     });
 };
+const getUsersBySearch = async (req, res) => {
+  const { search } = req.query;
+  const query = {
+    $or: [
+      { name: { $regex: search, $options: 'i' }},
+      { email: { $regex: search, $options: 'i'}},
+      { role_name: { $regex: search, $options: 'i' }}
+    ]
+  };
+
+  try {
+    const results = await User.find(query);
+    res.json(results).status(200);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  };
+};
 
 const updateUser = async (req, res) => {
     const { name, role_name } = req.body;
@@ -83,4 +100,5 @@ module.exports = {
   getAllUser,
   updateUser,
   deleteUser,
+  getUsersBySearch
 };

@@ -84,6 +84,26 @@ const getProjectByUserRole = async (req, res) => {
   }
 };
 
+const getProjectsBySearch = async (req, res) => {
+  const { search }= req.query;
+
+  const query = {
+    $or: [
+      { project_name: { $regex: search, $options: 'i' }}
+    ]
+  };
+
+  try {
+    const projects = await Project.find(query)
+    res.json(projects).status(200);
+  } catch (error) {
+    res.status(500).send({ 
+      success: false,
+      message: error.message
+    })
+  };
+};
+
 module.exports = {
   addProject,
   getProjectById,
@@ -91,4 +111,5 @@ module.exports = {
   deleteProject,
   getAllProject,
   getProjectByUserRole,
+  getProjectsBySearch
 };
