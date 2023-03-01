@@ -26,10 +26,10 @@ const getProjectById = async (req, res) => {
 
 const updateProject = async (req, res) => {
   const { id } = req.params;
-  const { project_name, discription, assigned_date, deadline, completed, is_completed, member, task, stack} = req.body;
+  const { project_name, discription, assigned_date, deadline, completed, is_completed, lead, member, task, stack} = req.body;
 
   await Project.findByIdAndUpdate(id, { project_name, discription, assigned_date, deadline, completed, 
-    is_completed, member, task, stack },{ new: true }).then((data) => {
+    is_completed, lead, member, task, stack },{ new: true }).then((data) => {
       res.json(data).status(200);
     })
     .catch((error) => {
