@@ -88,24 +88,34 @@ const getProjectByUserRole = async (req, res) => {
   }
 };
 
+
 const getProjectsBySearch = async (req, res) => {
-  const { search }= req.query;
-
+  const { id } = req.params;
+  const { search } = req.query;
   const query = {
-    $or: [
-      { project_name: { $regex: search, $options: 'i' }}
-    ]
+    project_name: { $regex: search, $options: "i" }
+    // $or: [{ project_name: { $regex: search, $options: "i" } }],
   };
-
   try {
-    const projects = await Project.find(query)
-    res.json(projects).status(200);
+    const projects = await Project.find({$and:[{ $or: [{"member._id": id, }, {"lead._id": id, }], },{...query}]});
+    if (projects) {
+      res.status(200).send({
+        success: true,
+        message: "Project get successfully",
+        res: projects,
+      });
+    } else {
+      res.status(402).send({
+        success: false,
+        message: "Something went wrong"
+      });
+    }
   } catch (error) {
-    res.status(500).send({ 
+    res.status(500).send({
       success: false,
-      message: error.message
-    })
-  };
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {
