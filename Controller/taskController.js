@@ -2,10 +2,10 @@ const task = require('../Model/taskModel');
 const Project = require('../Model/projectModel')
 
 const addTask = async (req, res) => {
-    const { project, title, lead, assigned, status } = req.body;
-    const tasks = await task.create({ project, title, lead, assigned, status});
-    if (tasks) {
-        await Project.findByIdAndUpdate(project, {"task":tasks}, {new: true}).then(data => {
+    const newtask = await task.create({...req.body.new,status:"pending"});
+    let newTasksArr = [...req.body.prev,newtask]
+    if (newtask) {
+        await Project.findByIdAndUpdate(req.body.new.project, {"task":newTasksArr}, {new: true}).then(data => {
             res.json(data).status(200)
         }).catch(error => {
             res.json({message: error.message});

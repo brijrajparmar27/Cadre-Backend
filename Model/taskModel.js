@@ -6,6 +6,10 @@ const taskSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },
+    descripation:{
+        type:String,
+        required:true
+    },
     title: {
         type: String,
         required: true
@@ -14,7 +18,7 @@ const taskSchema = mongoose.Schema({
         type: Object,
         default: {},
     },
-    assigned: {
+    assigned: {                                                                                
         type: Array,
         default: [],
     },
