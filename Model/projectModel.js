@@ -20,6 +20,9 @@ const projectSchema = mongoose.Schema(
     completed: {
       type: Date,
     },
+    progress:{
+       type:Number
+    },
     is_completed: {
       type: Boolean,
     },
