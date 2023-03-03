@@ -22,5 +22,17 @@ const addTask = async (req, res) => {
     });
   }
 };
+const updateTask = async (req, res) => {
+  // const {  } = req.params;
+  const { _id, project, title, lead, assigned, status } = req.body
+   await task
+    .findByIdAndUpdate(_id, { project, title, lead, assigned, status }, { new: true })
+    .then((val) => {
+      res.json(val).status(200);
+    })
+    .catch((err) => {
+      res.json({ message: err.message }).status(500);
+    });
+};
 
-module.exports = { addTask };
+module.exports = { addTask, updateTask };
