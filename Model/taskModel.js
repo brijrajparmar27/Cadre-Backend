@@ -6,12 +6,12 @@ const taskSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },
-    descripation:{
-        type:String,
-        required:true
-    },
     title: {
         type: String,
+        required: true
+    },
+    description:{
+        type:String,
         required: true
     },
     lead: {
@@ -25,7 +25,7 @@ const taskSchema = mongoose.Schema({
     status: {
         type: String,
         required: true
-    },
+    }
 }, {collection: 'Tasks'});
 
 module.exports = mongoose.model('task', taskSchema);
