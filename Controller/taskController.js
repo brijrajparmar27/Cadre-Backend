@@ -2,16 +2,11 @@ const task = require("../Model/taskModel");
 const Project = require("../Model/projectModel");
 
 const addTask = async (req, res) => {
-  
   const newtask = await task.create({ ...req.body.new, status: "Pending" });
   let newTasksArr = [...req.body.prev,newtask];
   if (newtask) {
     await Project.findByIdAndUpdate( req.body.new.project, { task: newTasksArr }, { new: true });
-    res.status(200).send({
-      success: true,
-      message: 'Add task successfully',
-      res: newtask
-    })
+    res.status(200).json(newtask)
   } else {
     res.status(401).send({
       message: "Something went wrong",
