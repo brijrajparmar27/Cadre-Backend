@@ -52,7 +52,7 @@ const getAllProject = async (req, res) => {
   const { column, order } = JSON.parse(req.query.sort);
   var sort = {};
   sort[`${column}`] = order
-  await Project.find({}).collation({locale: "en"}).sort(sort).then((data) => {
+  await Project.find({}).populate('task').collation({locale: "en"}).sort(sort).then((data) => {
       res.json(data).status(200);      
     }).catch((error) => {
       res.json({ message: error.message }).status(500);

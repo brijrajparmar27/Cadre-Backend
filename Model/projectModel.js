@@ -34,10 +34,10 @@ const projectSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    task: {
-      type: Array,
-      default: [],
-    },
+    task:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'task'
+    }],
     stack: {
       type: Array,
       default: [],
