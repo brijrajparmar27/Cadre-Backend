@@ -2,15 +2,9 @@ const task = require("../Model/taskModel");
 const Project = require("../Model/projectModel");
 
 const addTask = async (req, res) => {
-  const newtask = await task.create({ ...req.body.new, status: "pending" });
-  let newTasksArr = [...req.body.prev, newtask];
+  const newtask = await task.create({ ...req.body, status: "pending" });
   if (newtask) {
-    await Project.findByIdAndUpdate(
-      req.body.new.project,
-      { task: newTasksArr },
-      { new: true }
-    );
-    res.status(200).json(newtask);
+    res.status(200).json(newtask)
   } else {
     res.status(401).send({
       message: "Something went wrong",
@@ -35,4 +29,12 @@ const updateTask = (req, res) => {
     });
 };
 
-module.exports = { addTask, updateTask };
+const getAllTasks = async (req, res) => {
+    await task.find().populate('project').then(data => {
+      res.json(data).status(200);
+    }).catch(error => {
+      res.json({message: error.message});
+    });
+};
+
+module.exports = { addTask, updateTask,  getAllTasks};

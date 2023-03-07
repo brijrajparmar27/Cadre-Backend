@@ -1,10 +1,22 @@
 const Project = require("../Model/projectModel");
+const task = require("../Model/taskModel");
 
 const addProject = async (req, res) => {
-  const { project_name, description, assigned_date, deadline, completed, is_completed, lead, member, task, stack,progress } = req.body;
+  const {
+    project_name,
+    description,
+    assigned_date,
+    deadline,
+    completed,
+    is_completed,
+    lead,
+    member,
+    stack,
+    progress,
+  } = req.body;
 
-  await Project.create({ project_name, description, assigned_date, deadline, completed, is_completed, lead, member, task, stack,progress
-  }).then((data) => {
+  await Project.create({ project_name, description, assigned_date, deadline, completed, is_completed, lead, member, stack, progress })
+    .then((data) => {
       res.json(data).status(200);
     })
     .catch((err) => {
@@ -13,37 +25,32 @@ const addProject = async (req, res) => {
 };
 
 const getProjectById = async (req, res) => {
-
-  const { id } = req.params;
-  await Project.findById(id).populate('task')
-    .then((data) => {
-      res.json(data).status(200);
-    })
-    .catch((error) => {
-      res.json({ message: error.message }).status(500);
-    });
+  try {
+    const { id } = req.params;
+    let projectData = await Project.findById(id);
+    let taskData = await task.find({ project: projectData._id });
+    res.json({ ...projectData._doc, task: taskData }).status(200);
+  } catch (error) {
+    res.json({ message: error.message }).status(500);
+  }
 };
 
 const updateProject = async (req, res) => {
   const { id } = req.params;
-  const { project_name, description, assigned_date, deadline, completed, is_completed, lead, member, task, stack,progress} = req.body;
-
-  await Project.findByIdAndUpdate(id, { project_name, description, assigned_date, deadline, completed, 
-    is_completed, lead, member, task, stack ,progress},{ new: true }).then((data) => {
-      res.json(data).status(200);
-    })
-    .catch((error) => {
+  const { project_name, description, assigned_date, deadline, completed, is_completed, lead, member, task, stack, progress } = req.body;
+  await Project.findByIdAndUpdate( id, { project_name, description, assigned_date, deadline, completed, is_completed, lead, member,
+    task, stack, progress },{ new: true }).then((data) => {
+    res.json(data).status(200);
+    }).catch((error) => {
       res.json({ message: error.message });
     });
 };
 
 const deleteProject = async (req, res) => {
   const { id } = req.params;
-  await Project.findByIdAndDelete(id)
-    .then((data) => {
+  await Project.findByIdAndDelete(id).then((data) => {
       res.json(data).status(200);
-    })
-    .catch((error) => {
+    }).catch((error) => {
       res.json({ message: error.message }).status(500);
     });
 };
@@ -51,9 +58,9 @@ const deleteProject = async (req, res) => {
 const getAllProject = async (req, res) => {
   const { column, order } = JSON.parse(req.query.sort);
   var sort = {};
-  sort[`${column}`] = order
-  await Project.find({}).populate('task').collation({locale: "en"}).sort(sort).then((data) => {
-      res.json(data).status(200);      
+  sort[`${column}`] = order;
+  await Project.find({}) .populate("task") .collation({ locale: "en" }) .sort(sort) .then((data) => {
+      res.json(data).status(200);
     }).catch((error) => {
       res.json({ message: error.message }).status(500);
     });
@@ -63,7 +70,7 @@ const getProjectByUserRole = async (req, res) => {
   const { id } = req.params;
   const { column, order } = JSON.parse(req.query.sort);
   var sort = {};
-  sort[`${column}`] = order
+  sort[`${column}`] = order;
   const usersProject = await Project.find({
     $or: [
       {
@@ -73,7 +80,9 @@ const getProjectByUserRole = async (req, res) => {
         "lead._id": id,
       },
     ],
-  }).collation({locale: "en"}).sort(sort);
+  })
+    .collation({ locale: "en" })
+    .sort(sort);
   if (usersProject) {
     res.status(200).send({
       success: true,
@@ -88,16 +97,15 @@ const getProjectByUserRole = async (req, res) => {
   }
 };
 
-
 const getProjectsBySearch = async (req, res) => {
   const { id } = req.params;
   const { search } = req.query;
   const query = {
-    project_name: { $regex: search, $options: "i" }
+    project_name: { $regex: search, $options: "i" },
     // $or: [{ project_name: { $regex: search, $options: "i" } }],
   };
   try {
-    const projects = await Project.find({$and:[{ $or: [{"member._id": id, }, {"lead._id": id, }], },{...query}]});
+    const projects = await Project.find({ $and: [{ $or: [{ "member._id": id }, { "lead._id": id }] }, { ...query }],});
     if (projects) {
       res.status(200).send({
         success: true,
@@ -107,7 +115,7 @@ const getProjectsBySearch = async (req, res) => {
     } else {
       res.status(402).send({
         success: false,
-        message: "Something went wrong"
+        message: "Something went wrong",
       });
     }
   } catch (error) {
@@ -125,5 +133,5 @@ module.exports = {
   deleteProject,
   getAllProject,
   getProjectByUserRole,
-  getProjectsBySearch
+  getProjectsBySearch,
 };

@@ -31,16 +31,15 @@ const projectSchema = mongoose.Schema(
       type: Array,
       default: [],
     },
-    task:[{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'task'
-    }],
     stack: {
       type: Array,
       default: [],
     },
+    progress: {
+      type: Number
+    }
   },
   { collection: "Projects" }
 );
 
-module.exports = mongoose.model("Project", projectSchema);
+module.exports = mongoose.model("project", projectSchema);
