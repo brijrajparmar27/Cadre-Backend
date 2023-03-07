@@ -2,7 +2,7 @@ const task = require("../Model/taskModel");
 const Project = require("../Model/projectModel");
 
 const addTask = async (req, res) => {
-  const newtask = await task.create({ ...req.body.new, status: "Pending" });
+  const newtask = await task.create({ ...req.body.new, status: "pending" });
   let newTasksArr = [...req.body.prev, newtask];
   if (newtask) {
     await Project.findByIdAndUpdate(
@@ -18,13 +18,13 @@ const addTask = async (req, res) => {
   }
 };
 
-const updateTask = async (req, res) => {
+const updateTask = (req, res) => {
   const { id } = req.params;
-  const { project, title, lead, assigned, status } = req.body;
-  await task
+  const { project, title, description, assigned, status } = req.body;
+  task
     .findByIdAndUpdate(
       id,
-      { project, title, lead, assigned, status },
+      { project, title, description, assigned, status },
       { new: true }
     )
     .then((val) => {
