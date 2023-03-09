@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     required: true,
   },
   img: {
-    type: Buffer,
+    type: String,
     default: null
   },
   contact_number: {

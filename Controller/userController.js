@@ -71,16 +71,23 @@ const getUsersBySearch = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    const { name, img, contact_number } = req.body;
+    const { name, contact_number } = req.body;
     const { id } = req.params;
 
-    await User.findByIdAndUpdate(id, { name, img, contact_number }, { new: true }).then((data) => {
+    await User.findByIdAndUpdate(id, { name, contact_number }, { new: true }).then((data) => {
         res.status(200).send({ success: true, message: "Details update successfully",
-        _id: data._id, name: data.name, img: data.img, contact_number: data.contact_number});
+        _id: data._id, name: data.name, contact_number: data.contact_number
+      });
     }).catch((error) => {
         res.status(500).send({ message: error.message });
     });
 };
+
+
+const updateUserDp = async(req, res) => {
+  // const Images = await User.create()
+  console.log(req.files);
+}
 
 const deleteUser = async (req, res) => {
     const { id } = req.params;
@@ -99,5 +106,6 @@ module.exports = {
   getAllUser,
   updateUser,
   deleteUser,
+  updateUserDp,
   getUsersBySearch
 };
