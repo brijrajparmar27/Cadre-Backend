@@ -71,13 +71,12 @@ const getUsersBySearch = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    const { name, role_name } = req.body;
+    const { name, img, contact_number } = req.body;
     const { id } = req.params;
 
-    await User.findByIdAndUpdate(id, { name, role_name }, { new: true }).then((data) => {
+    await User.findByIdAndUpdate(id, { name, img, contact_number }, { new: true }).then((data) => {
         res.status(200).send({ success: true, message: "Details update successfully",
-        _id: data._id, name: data.name, role_name: data.role_name,
-      });
+        _id: data._id, name: data.name, img: data.img, contact_number: data.contact_number});
     }).catch((error) => {
         res.status(500).send({ message: error.message });
     });

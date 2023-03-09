@@ -18,6 +18,14 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  img: {
+    type: Buffer,
+    default: null
+  },
+  contact_number: {
+    type: String,
+    default: null
+  }
 },{collection:"Users"});
 
 userSchema.statics.signup = async function (name, email, password, role_name) {

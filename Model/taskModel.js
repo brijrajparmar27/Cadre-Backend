@@ -25,6 +25,13 @@ const taskSchema = mongoose.Schema({
     status: {
         type: String,
         required: true
+    },
+    priority: {
+        type: Boolean,
+        default: false
+    },
+    deadline: {
+      type: Date
     }
 }, {collection: 'Tasks'});
 
