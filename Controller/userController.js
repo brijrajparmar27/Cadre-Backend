@@ -83,12 +83,6 @@ const updateUser = async (req, res) => {
     });
 };
 
-
-const updateUserDp = async(req, res) => {
-  // const Images = await User.create()
-  console.log(req.files);
-}
-
 const deleteUser = async (req, res) => {
     const { id } = req.params;
 
@@ -106,6 +100,5 @@ module.exports = {
   getAllUser,
   updateUser,
   deleteUser,
-  updateUserDp,
   getUsersBySearch
 };
