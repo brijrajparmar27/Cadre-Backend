@@ -9,4 +9,21 @@ const addTimeSheet = async (req, res) => {
     });
 };
 
-module.exports = { addTimeSheet }
+const getTimeSheet = async (req, res) => {
+    const { id } = req.params;
+    await timesheet.find({user: id}).then(data => {
+        res.json(data).status(200)
+    }).catch(error => {
+        res.json({message: error.message});
+    });
+};
+
+const getAllTimeSheet = async (req, res) => {
+    await timesheet.find().then(data => {
+        res.json(data).status(200);
+    }).catch(error => {
+        res.json({ message: error.message})
+    });
+};
+
+module.exports = { addTimeSheet, getTimeSheet, getAllTimeSheet }
