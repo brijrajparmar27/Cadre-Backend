@@ -2,18 +2,7 @@ const Project = require("../Model/projectModel");
 const task = require("../Model/taskModel");
 
 const addProject = async (req, res) => {
-  const {
-    project_name,
-    description,
-    assigned_date,
-    deadline,
-    completed,
-    is_completed,
-    lead,
-    member,
-    stack,
-    progress,
-  } = req.body;
+  const { project_name, description, assigned_date, deadline, completed, is_completed, lead, member, stack, progress } = req.body;
 
   await Project.create({ project_name, description, assigned_date, deadline, completed, is_completed, lead, member, stack, progress })
     .then((data) => {
@@ -59,7 +48,7 @@ const getAllProject = async (req, res) => {
   const { column, order } = JSON.parse(req.query.sort);
   var sort = {};
   sort[`${column}`] = order;
-  await Project.find({}) .populate("task") .collation({ locale: "en" }) .sort(sort) .then((data) => {
+  await Project.find({}).collation({ locale: "en" }).sort(sort).then((data) => {
       res.json(data).status(200);
     }).catch((error) => {
       res.json({ message: error.message }).status(500);
@@ -85,9 +74,7 @@ const getProjectByUserRole = async (req, res) => {
     .sort(sort);
   if (usersProject) {
     res.status(200).send({
-      success: true,
-      message: "Project get successfully",
-      res: usersProject,
+      res: usersProject
     });
   } else {
     res.status(402).send({

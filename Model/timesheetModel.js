@@ -5,26 +5,28 @@ const timesheetSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user' 
     },
-    projectName: {
-        type: String,
-        required: true
-    },
-    discription: {
-        type: String,
-        required: true
-    },
-    status: {
-        type: Boolean,
-        default: false
-    },
     date: {
-        type: String,
-        required: true
+        type: Date, 
+        default: Date.now
     },
-    hours: {
-        type: String,
-        required: true
-    }
+    works: [{
+        projectName: {
+            type: String,
+            required: true
+        },
+        discription: {
+            type: String,
+            required: true
+        },
+        isCompleted: {
+            type: Boolean,
+            default: false
+        },
+        hours: {
+            type: String,
+            default: true
+        }
+    }]
 }, { collection: 'TimeSheet'});
 
 module.exports = mongoose.model('timesheet', timesheetSchema);
