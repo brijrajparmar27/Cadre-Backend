@@ -27,7 +27,7 @@ const signIn = async (req, res) => {
     let user = await User.login(email, password);
     let token = generateJWT(user);
 
-    res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token,});
+    res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token,img:user.img});
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
