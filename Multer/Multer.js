@@ -4,17 +4,15 @@ const userModel = require('../Model/userModel');
 const imageStorage = multer.diskStorage({
     destination: 'public/dp',
     filename: (req, file, cb) => {
-        console.log(req.body.Id, 7);
         cb(null, req.body.Id + '.jpg')
         userModel.findByIdAndUpdate(req.body.Id,{img:req.body.Id+".jpg"}).then((res)=>{
-            console.log("uploaded to db")
         }).catch(err=>{
-            console.log(err);
+            res.json(err);
         });
     }
   });
   
-  const imageUpload = multer({
+const imageUpload = multer({
     storage: imageStorage,
     limits: {
         fileSize: 1000000 // 1000000 Bytes = 1 MB

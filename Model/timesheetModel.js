@@ -5,9 +5,9 @@ const timesheetSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user' 
     },
-    date: {
-        type: Date, 
-        default: Date.now
+    Date: {
+        type: Date,
+        required: true 
     },
     works: [{
         projectName: {
