@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const randomColor = require("randomcolor");
 
 const projectSchema = mongoose.Schema(
   {
@@ -36,8 +37,12 @@ const projectSchema = mongoose.Schema(
       default: [],
     },
     progress: {
-      type: Number
-    }
+      type: Number,
+    },
+    hex: {
+      type: String,
+      default: randomColor({ luminosity: "light" }),
+    },
   },
   { collection: "Projects" }
 );
