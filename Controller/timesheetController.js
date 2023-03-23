@@ -1,12 +1,22 @@
 const timesheet = require('../Model/timesheetModel');
 
 const addTimeSheet = async (req, res) => {
-    const { user , works, Date } = req.body;
-    await timesheet.create({ user, works, Date }).then(data => {
-        res.json(data).status(200)
-    }).catch(error => {
-        res.json({message: error.message}).status(500);
-    });
+    const { user , works, Date } = req.body
+    const users = await timesheet.findOne({ $and: [{Date: Date}, {user: user}] });
+        if (users) {
+            let work =[...users.works, ...works];
+            await timesheet.findOneAndUpdate(users._id,{works: work},{new:true}).then(data => {
+                res.json(data).status(200)
+            }).catch(error => {
+                res.json(error).status(500)
+            });
+        } else  {
+        await timesheet.create({user, works, Date}).then(data => {
+            res.json(data).status(200)
+        }).catch(error => {
+            res.json(error).status(500)
+        });
+    };
 };
 
 const getTimeSheetByIdandDate = async (req, res) => {
