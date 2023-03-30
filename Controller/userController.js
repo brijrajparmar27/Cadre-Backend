@@ -92,6 +92,32 @@ const deleteUser = async (req, res) => {
       res.status(500).send({ message: error.message });
     });
 };
+const searchUser=async(req,res)=>{
+  const { search } = req.query;
+  const query = {
+    name: { $regex: search, $options: "i" },
+  };
+  try {
+    const user = await User.find(query);
+    if (user) {
+      res.status(200).send({
+        success: true,
+        message: "user get successfully",
+        res: user,
+      });
+    } else {
+      res.status(402).send({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 module.exports = {
   signUp,

@@ -1,10 +1,11 @@
 const express = require('express');
 const chatRouter = express.Router();
 
-const { } = require('../Controller/chatController');
+const { accessChat, fetchChat } = require('../Controller/chatController');
+const authenticateJWT = require('../Middleware/userAuth');
 
-chatRouter.get('/chat');
-
+chatRouter.post('/chat',authenticateJWT,accessChat);
+chatRouter.get('/chat',authenticateJWT,fetchChat);
 
 
 module.exports = chatRouter;
