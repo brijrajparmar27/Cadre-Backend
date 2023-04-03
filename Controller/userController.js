@@ -1,4 +1,5 @@
 const User = require("../Model/userModel");
+const Project = require('../Model/projectModel')
 const jwt = require("jsonwebtoken");
 
 const generateJWT = (user) => {
@@ -52,6 +53,7 @@ const getAllUser = async (req, res) => {
         res.status(500).send({ message: error.message });
     });
 };
+
 const getUsersBySearch = async (req, res) => {
   const { search } = req.query;
   const query = {
@@ -61,7 +63,6 @@ const getUsersBySearch = async (req, res) => {
       { role_name: { $regex: search, $options: 'i' }}
     ]
   };
-
   try {
     const results = await User.find(query);
     res.json(results).status(200);
@@ -92,7 +93,31 @@ const deleteUser = async (req, res) => {
       res.status(500).send({ message: error.message });
     });
 };
-const searchUser=async(req,res)=>{
+
+
+const getUserAndProjectBySearch = async (req, res) => {
+
+    const { search } = req.query;
+    const query = {
+      $or: [
+        { name: { $regex: search, $options: 'i' }},
+        { project_name: { $regex: search, $options: 'i'}},
+      ]
+    };
+    const users = await User.find(query);
+    const projects = await Project.find(query);
+    if (users, projects) {
+    res.status(200).send([
+       ...users, ...projects
+    ])
+    } else {
+      res.status(402).send({
+        message: 'Users not Fetched!!'
+      })
+    }
+}
+
+const searchUser = async(req,res)=>{
   const { search } = req.query;
   const query = {
     name: { $regex: search, $options: "i" },
@@ -126,5 +151,7 @@ module.exports = {
   getAllUser,
   updateUser,
   deleteUser,
-  getUsersBySearch
+  getUsersBySearch,
+  getUserAndProjectBySearch,
+  searchUser
 };

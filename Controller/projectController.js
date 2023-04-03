@@ -69,9 +69,7 @@ const getProjectByUserRole = async (req, res) => {
         "lead._id": id,
       },
     ],
-  })
-    .collation({ locale: "en" })
-    .sort(sort);
+  }).collation({ locale: "en" }).sort(sort);
   if (usersProject) {
     res.status(200).send({
       res: usersProject
