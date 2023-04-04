@@ -97,24 +97,34 @@ const deleteUser = async (req, res) => {
 
 const getUserAndProjectBySearch = async (req, res) => {
 
-    const { search } = req.query;
-    const query = {
-      $or: [
-        { name: { $regex: search, $options: 'i' }},
-        { project_name: { $regex: search, $options: 'i'}},
-      ]
-    };
-    const users = await User.find(query);
-    const projects = await Project.find(query);
-    if (users, projects) {
+  const { id } = req.params;
+  // const { search } = req.query;
+  // const query = {
+  //   $or: [
+  //     { name: { $regex: search, $options: 'i' }},
+  //     { project_name: { $regex: search, $options: 'i'}},
+  //   ]
+  // };
+  const users = await User.find();
+  const usersProject = await Project.find({
+    $or: [
+      {
+        "member._id": id,
+      },
+      {
+        "lead._id": id,
+      },
+    ],
+  })
+  if (users, usersProject) {
     res.status(200).send([
-       ...users, ...projects
-    ])
-    } else {
-      res.status(402).send({
-        message: 'Users not Fetched!!'
-      })
-    }
+      ...users, ...usersProject
+   ])
+  } else {
+    res.status(403).send({
+      message: 'Something went wrong'
+    })
+  }
 }
 
 const searchUser = async(req,res)=>{

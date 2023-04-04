@@ -18,7 +18,7 @@ userRouter.get('/get-alluser', getAllUser);
 userRouter.put('/user-details-update/:id', updateUser);
 userRouter.delete('/delete-user/:id', deleteUser);
 userRouter.get('/get-users-by-search', getUsersBySearch);
-userRouter.get('/get-user-and-project', getUserAndProjectBySearch);
+userRouter.get('/get-user-and-project/:id', getUserAndProjectBySearch);
 userRouter.post("/update-user-dp", imageUpload.single('Image'), (req, res) => {
     res.send("Image Uploaded");
     console.log(req.data,req.body,req.files);
