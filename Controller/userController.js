@@ -97,25 +97,16 @@ const deleteUser = async (req, res) => {
 
 const getUserAndProjectBySearch = async (req, res) => {
 
-  const { id } = req.params;
-  // const { search } = req.query;
-  // const query = {
-  //   $or: [
-  //     { name: { $regex: search, $options: 'i' }},
-  //     { project_name: { $regex: search, $options: 'i'}},
-  //   ]
-  // };
-  const users = await User.find();
-  const usersProject = await Project.find({
+  // const { id } = req.params;
+  const { search } = req.query;
+  const query = {
     $or: [
-      {
-        "member._id": id,
-      },
-      {
-        "lead._id": id,
-      },
-    ],
-  })
+      { name: { $regex: search, $options: 'i' }},
+      { project_name: { $regex: search, $options: 'i'}},
+    ]
+  };
+  const users = await User.find(query);
+  const usersProject = await Project.find(query);
   if (users, usersProject) {
     res.status(200).send([
       ...users, ...usersProject
@@ -125,7 +116,7 @@ const getUserAndProjectBySearch = async (req, res) => {
       message: 'Something went wrong'
     })
   }
-}
+};
 
 const searchUser = async(req,res)=>{
   const { search } = req.query;
