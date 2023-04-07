@@ -95,38 +95,6 @@ const deleteUser = async (req, res) => {
 };
 
 
-const getUserAndProjectBySearch = async (req, res) => {
-
-  const { id } = req.params;
-  // const { search } = req.query;
-  // const query = {
-  //   $or: [
-  //     { name: { $regex: search, $options: 'i' }},
-  //     { project_name: { $regex: search, $options: 'i'}},
-  //   ]
-  // };
-  const users = await User.find();
-  const usersProject = await Project.find({
-    $or: [
-      {
-        "member._id": id,
-      },
-      {
-        "lead._id": id,
-      },
-    ],
-  })
-  if (users, usersProject) {
-    res.status(200).send([
-      ...users, ...usersProject
-   ])
-  } else {
-    res.status(403).send({
-      message: 'Something went wrong'
-    })
-  }
-}
-
 const searchUser = async(req,res)=>{
   const { search } = req.query;
   const query = {
@@ -154,6 +122,33 @@ const searchUser = async(req,res)=>{
   }
 }
 
+const getUserAndProjectBySearch = async (req, res) => {
+
+  const { id } = req.params;
+  const { search } = req.query;
+  let userQuery = {}
+  let projectQuery = {}
+  if(search)
+  {
+    let temp = {};
+    temp['$regex'] = search;
+    temp['$options'] = "i";
+    projectQuery['project_name'] = temp;
+    userQuery['name'] = temp;
+  }
+  const users = await User.find(userQuery);
+  const usersProject = await Project.find({$and: [{ $or: [{ "member._id": id }, { "lead._id": id }]} , { ...projectQuery }]});
+  if (users, usersProject) {
+    res.status(200).send([
+      ...users, ...usersProject
+   ])
+  } else {
+    res.status(403).send({
+      message: 'Something went wrong'
+    })
+  }
+};
+
 module.exports = {
   signUp,
   signIn,
@@ -162,6 +157,6 @@ module.exports = {
   updateUser,
   deleteUser,
   getUsersBySearch,
-  getUserAndProjectBySearch,
-  searchUser
+  searchUser,
+  getUserAndProjectBySearch
 };
