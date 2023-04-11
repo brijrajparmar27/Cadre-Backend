@@ -136,7 +136,7 @@ const getUserAndProjectBySearch = async (req, res) => {
     projectQuery['project_name'] = temp;
     userQuery['name'] = temp;
   }
-  const users = await User.find({...userQuery}, {password: 0});
+  const users = await User.find({$and:[{...userQuery},{ _id:{$ne:id} }]}, {password: 0});
   const usersProject = await Chat.find({$and: [{ isGroupChat: true },{ users: id }, { ...projectQuery }]});
   if (users, usersProject) {
     res.status(200).send([
