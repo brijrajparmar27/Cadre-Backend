@@ -15,7 +15,7 @@ userRouter.post('/user-register', signUp);
 userRouter.post('/user-login', signIn);
 userRouter.get('/get-userbyid/:id', getUserById);
 userRouter.get('/get-alluser', getAllUser);
-userRouter.put('/user-details-update/:id', updateUser);
+userRouter.patch('/user-details-update/:id', updateUser);
 userRouter.delete('/delete-user/:id', deleteUser);
 userRouter.get('/get-users-by-search', getUsersBySearch);
 userRouter.get('/get-user-and-project/:id', getUserAndProjectBySearch);
