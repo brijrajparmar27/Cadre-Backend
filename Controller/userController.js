@@ -124,7 +124,6 @@ const searchUser = async(req,res)=>{
 }
 
 const getUserAndProjectBySearch = async (req, res) => {
-  // {$and: [{ $or: [{ "member._id": id }, { "lead._id": id }]}, { ...projectQuery }]}
   const { id } = req.params;
   const { search } = req.query;
   let userQuery = {}
@@ -137,8 +136,8 @@ const getUserAndProjectBySearch = async (req, res) => {
     projectQuery['project_name'] = temp;
     userQuery['name'] = temp;
   }
-  const users = await User.find(userQuery);
-  const usersProject = await Chat.find({$and: [ {isGroupChat: true },{ users: id }, { ...projectQuery }]});
+  const users = await User.find({...userQuery}, {password: 0});
+  const usersProject = await Chat.find({$and: [{ isGroupChat: true },{ users: id }, { ...projectQuery }]});
   if (users, usersProject) {
     res.status(200).send([
       ...users, ...usersProject
