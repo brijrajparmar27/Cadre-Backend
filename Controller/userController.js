@@ -135,6 +135,7 @@ const getUserAndProjectBySearch = async (req, res) => {
     temp['$options'] = "i";
     projectQuery['project_name'] = temp;
     userQuery['name'] = temp;
+    projectQuery['chatName'] = temp
   }
   const users = await User.find({$and:[{...userQuery},{ _id:{$ne:id} }]}, {password: 0});
   const usersProject = await Chat.find({$and: [{ isGroupChat: true },{ users: id }, { ...projectQuery }]});
