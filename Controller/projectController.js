@@ -130,7 +130,7 @@ const getProjectByUserRole = async (req, res) => {
     ],
   };
   if (users.role_name === "Admin") {
-      query={}
+    query = {};
   }
   const usersProject = await Project.find(query)
     .collation({ locale: "en" })
@@ -155,8 +155,16 @@ const getProjectsBySearch = async (req, res) => {
     // $or: [{ project_name: { $regex: search, $options: "i" } }],
   };
   try {
+    const users = await userModel.findById({ _id: id });
+    var isAdmin = {
+      $or: [{ "member._id": id }, { "lead._id": id }],
+    };
+    if (users.role_name === "Admin") {
+      isAdmin = {};
+    }
+
     const projects = await Project.find({
-      $and: [{ $or: [{ "member._id": id }, { "lead._id": id }] }, { ...query }],
+      $and: [isAdmin, { ...query }],
     });
     if (projects) {
       res.status(200).send({
