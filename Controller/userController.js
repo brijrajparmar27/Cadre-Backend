@@ -1,5 +1,6 @@
 const User = require("../Model/userModel");
-const Project = require('../Model/projectModel')
+const Chat = require('../Model/chatModel')
+// const Project = require('../Model/projectModel');
 const jwt = require("jsonwebtoken");
 
 const generateJWT = (user) => {
@@ -123,7 +124,7 @@ const searchUser = async(req,res)=>{
 }
 
 const getUserAndProjectBySearch = async (req, res) => {
-
+  // {$and: [{ $or: [{ "member._id": id }, { "lead._id": id }]}, { ...projectQuery }]}
   const { id } = req.params;
   const { search } = req.query;
   let userQuery = {}
@@ -137,7 +138,7 @@ const getUserAndProjectBySearch = async (req, res) => {
     userQuery['name'] = temp;
   }
   const users = await User.find(userQuery);
-  const usersProject = await Project.find({$and: [{ $or: [{ "member._id": id }, { "lead._id": id }]}, { ...projectQuery }]});
+  const usersProject = await Chat.find({$and: [ {isGroupChat: true },{ users: id }, { ...projectQuery }]});
   if (users, usersProject) {
     res.status(200).send([
       ...users, ...usersProject
