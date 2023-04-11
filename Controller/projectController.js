@@ -1,10 +1,33 @@
 const Project = require("../Model/projectModel");
 const task = require("../Model/taskModel");
+const userModel = require("../Model/userModel");
 
 const addProject = async (req, res) => {
-  const { project_name, description, assigned_date, deadline, completed, is_completed, lead, member, stack, progress } = req.body;
+  const {
+    project_name,
+    description,
+    assigned_date,
+    deadline,
+    completed,
+    is_completed,
+    lead,
+    member,
+    stack,
+    progress,
+  } = req.body;
 
-  await Project.create({ project_name, description, assigned_date, deadline, completed, is_completed, lead, member, stack, progress })
+  await Project.create({
+    project_name,
+    description,
+    assigned_date,
+    deadline,
+    completed,
+    is_completed,
+    lead,
+    member,
+    stack,
+    progress,
+  })
     .then((data) => {
       res.json(data).status(200);
     })
@@ -26,20 +49,51 @@ const getProjectById = async (req, res) => {
 
 const updateProject = async (req, res) => {
   const { id } = req.params;
-  const { project_name, description, assigned_date, deadline, completed, is_completed, lead, member, task, stack, progress } = req.body;
-  await Project.findByIdAndUpdate( id, { project_name, description, assigned_date, deadline, completed, is_completed, lead, member,
-    task, stack, progress },{ new: true }).then((data) => {
-    res.json(data).status(200);
-    }).catch((error) => {
+  const {
+    project_name,
+    description,
+    assigned_date,
+    deadline,
+    completed,
+    is_completed,
+    lead,
+    member,
+    task,
+    stack,
+    progress,
+  } = req.body;
+  await Project.findByIdAndUpdate(
+    id,
+    {
+      project_name,
+      description,
+      assigned_date,
+      deadline,
+      completed,
+      is_completed,
+      lead,
+      member,
+      task,
+      stack,
+      progress,
+    },
+    { new: true }
+  )
+    .then((data) => {
+      res.json(data).status(200);
+    })
+    .catch((error) => {
       res.json({ message: error.message });
     });
 };
 
 const deleteProject = async (req, res) => {
   const { id } = req.params;
-  await Project.findByIdAndDelete(id).then((data) => {
+  await Project.findByIdAndDelete(id)
+    .then((data) => {
       res.json(data).status(200);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       res.json({ message: error.message }).status(500);
     });
 };
@@ -48,9 +102,13 @@ const getAllProject = async (req, res) => {
   const { column, order } = JSON.parse(req.query.sort);
   var sort = {};
   sort[`${column}`] = order;
-  await Project.find({}).collation({ locale: "en" }).sort(sort).then((data) => {
+  await Project.find({})
+    .collation({ locale: "en" })
+    .sort(sort)
+    .then((data) => {
       res.json(data).status(200);
-    }).catch((error) => {
+    })
+    .catch((error) => {
       res.json({ message: error.message }).status(500);
     });
 };
@@ -60,7 +118,8 @@ const getProjectByUserRole = async (req, res) => {
   const { column, order } = JSON.parse(req.query.sort);
   var sort = {};
   sort[`${column}`] = order;
-  const usersProject = await Project.find({
+  const users = await userModel.findById({ _id: id });
+  var query = {
     $or: [
       {
         "member._id": id,
@@ -69,10 +128,16 @@ const getProjectByUserRole = async (req, res) => {
         "lead._id": id,
       },
     ],
-  }).collation({ locale: "en" }).sort(sort);
+  };
+  if (users.role_name === "Admin") {
+      query={}
+  }
+  const usersProject = await Project.find(query)
+    .collation({ locale: "en" })
+    .sort(sort);
   if (usersProject) {
     res.status(200).send({
-      res: usersProject
+      res: usersProject,
     });
   } else {
     res.status(402).send({
@@ -90,7 +155,9 @@ const getProjectsBySearch = async (req, res) => {
     // $or: [{ project_name: { $regex: search, $options: "i" } }],
   };
   try {
-    const projects = await Project.find({ $and: [{ $or: [{ "member._id": id }, { "lead._id": id }] }, { ...query }],});
+    const projects = await Project.find({
+      $and: [{ $or: [{ "member._id": id }, { "lead._id": id }] }, { ...query }],
+    });
     if (projects) {
       res.status(200).send({
         success: true,
