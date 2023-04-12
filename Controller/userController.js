@@ -17,7 +17,7 @@ const signUp = async (req, res) => {
   try {
     let user = await User.signup(name, email, password, role_name);
     let token = generateJWT(user);
-    res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token });
+    res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token,contact_number:user.contact_number });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
@@ -29,7 +29,7 @@ const signIn = async (req, res) => {
     let user = await User.login(email, password);
     let token = generateJWT(user);
 
-    res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token,img:user.img});
+    res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token,img:user.img,contact_number:user.contact_number});
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
