@@ -1,4 +1,5 @@
 const timesheet = require('../Model/timesheetModel');
+const userModel = require('../Model/userModel');
 
 const addTimeSheet = async (req, res) => {
     const { user , works, Date } = req.body
@@ -28,7 +29,11 @@ const getTimeSheetByIdandDate = async (req, res) => {
     if(date){
         query['Date'] = date;
     }
-    await timesheet.find(query).then(data => {
+    const users = await userModel.findById({ _id: id });
+    if (users.role_name === "Admin") {
+        delete query.user;
+    }
+    await timesheet.find(query) .populate('user').then(data => {
         res.json(data).status(200)
     }).catch(error => {
         res.json({message: error.message});

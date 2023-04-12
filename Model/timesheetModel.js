@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const timesheetSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user' 
+        ref: 'Users' 
     },
     Date: {
         type: Date,
