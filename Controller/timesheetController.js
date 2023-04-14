@@ -58,7 +58,6 @@ const getTimeSheetByIdandDate = async (req, res) => {
       Date: date,
     };
   }
-  console.log(projectName);
   await timesheet
     .find(query)
     .populate("user")

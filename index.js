@@ -21,32 +21,34 @@ const io = require("socket.io")(server, {
     origin: "*",
   },
 });
+
 io.on("connection", (socket) => {
-  console.log("connect socket.io");
-  socket.on("setup", (userdata) => {
-    socket.join(userdata._id);
+  console.log("connection socket io");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    console.log(userData._id);
     socket.emit("connected");
   });
   socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("user join room :" + room);
+    console.log("user join room" + room);
   });
-  socket.on("typing", (room) => {
-    console.log(room);
-    socket.in(room).emit("typing");
+  socket.on('typing',(room)=>{
+    socket.in(room).emit('typing');
   });
-  socket.on("stope typing", (room) => socket.in(room).emit("stope typing"));
-  socket.on("new message", (newMessageRecive) => {
-    var chat = newMessageRecive.chat;
-    if (!chat.users) {
-      console.log("chat user not define");
-    }
-    console.log(chat.users);
-    console.log(newMessageRecive);
-    chat.users.forEach((element) => {
-      console.log(element)
-      if (element._id == newMessageRecive.sender._id) return;
-      socket.in(element._id).emit("message", newMessageRecive);
+  socket.on('stope typing',(room)=>{
+    socket.in(room).emit(' stope typing');
+  });
+  socket.on("new message", (newMessageRecieved) => {
+    var chat = newMessageRecieved.chat;
+
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+
+      socket.in(user._id).emit("message recieved", newMessageRecieved);
     });
   });
 });
