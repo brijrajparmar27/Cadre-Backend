@@ -34,11 +34,11 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("user join room" + room);
   });
-  socket.on('typing',(room)=>{
-    socket.in(room).emit('typing');
+  socket.on("typing", (room) => {
+    socket.to(room).emit("typing");
   });
-  socket.on('stope typing',(room)=>{
-    socket.in(room).emit(' stope typing');
+  socket.on("stop typing", (room) => {
+    socket.to(room).emit("stop typing");
   });
   socket.on("new message", (newMessageRecieved) => {
     var chat = newMessageRecieved.chat;
