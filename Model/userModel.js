@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema(
       default: null,
     },
     contact_number: {
-      type: String,
+      type: Number,
       default: null,
     },
   },
