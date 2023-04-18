@@ -13,9 +13,9 @@ const generateJWT = (user) => {
 };
 
 const signUp = async (req, res) => {
-  const { name, email, password, role_name } = req.body;
+  const { name, email, password, role_name,contact_number} = req.body;
   try {
-    let user = await User.signup(name, email, password, role_name);
+    let user = await User.signup(name, email, password, role_name,contact_number);
     let token = generateJWT(user);
     res.status(200).send({ _id: user._id, name: user.name, email: user.email, role_name: user.role_name, jwt: token,contact_number:user.contact_number });
   } catch (err) {
@@ -48,7 +48,7 @@ const getAllUser = async (req, res) => {
     const { column, order } = JSON.parse(req.query.sort);
     const sort = {};
     sort[`${column}`] = order 
-    await User.find({}, { password: 0 }).collation({locale: "en"}).sort(sort).then((data) => {
+    await User.find({}).collation({locale: "en"}).sort(sort).then((data) => {
         res.send(data).status(200);
     }).catch((error) => {
         res.status(500).send({ message: error.message });
@@ -73,12 +73,12 @@ const getUsersBySearch = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    const { name, contact_number } = req.body;
+    const { name, contact_number,role_name } = req.body;
     const { id } = req.params;
 
-    await User.findByIdAndUpdate(id, { name, contact_number }, { new: true }).then((data) => {
+    await User.findByIdAndUpdate(id, { name, contact_number,role_name}, { new: true }).then((data) => {
         res.status(200).send({ success: true, message: "Details update successfully",
-        _id: data._id, name: data.name, contact_number: data.contact_number
+        _id: data._id, name: data.name, contact_number: data.contact_number,role_name:data.role_name
       });
     }).catch((error) => {
         res.status(500).send({ message: error.message });
