@@ -31,7 +31,13 @@ const userSchema = mongoose.Schema(
   { collection: "Users" }
 );
 
-userSchema.statics.signup = async function (name, email, password, role_name, contact_number) {
+userSchema.statics.signup = async function (
+  name,
+  email,
+  password,
+  role_name,
+  contact_number
+) {
   const user = await this.findOne({ email: email });
   if (user) {
     throw Error("Email already exits!!");
@@ -47,7 +53,7 @@ userSchema.statics.signup = async function (name, email, password, role_name, co
     email: email,
     password: hashpassword,
     role_name: role_name,
-    contact_number: contact_number
+    contact_number: contact_number,
   };
   const create_user = await this.create(newUser);
   return create_user;
